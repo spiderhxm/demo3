@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<dubbo:application name="#{environment['spring.application.name']}"/>
+
+    <!--producer公共配置-->
+    <!--retries 故障转移最大尝试次数-->
+    <!--delay:延迟到Spring初始化完成后，再暴露服务-->
+    <!--executes:限制每个方法，服务器端并发执行（或占用线程池线程数）不能超过30个-->
+    <!--mock:当服务端不可达时，客户端返回 null-->
+    <dubbo:provider retries="0" timeout="3000" mock="return null" delay="-1"/>
+
+	<dubbo:registry protocol="zookeeper" address="#{environment['demo3.zk.addr']}"
+                    group="#{environment['demo3.zk.group']?:'dev'}"
+                    timeout="10000" client="zkclient"/>
+    <!-- <dubbo:registry address="multicast://224.1.1.1:9090"/>   -->              
+
+	<dubbo:protocol name="dubbo" port="#{environment['demo3.dubbo.port']?:20880}"
+        dispatcher="message" threadpool="cached" threads="#{environment['demo3.dubbo.threads']?:100}"/>
+    <!-- 扫描注解包路径，多个包用逗号分隔，不填pacakge表示扫描当前ApplicationContext中所有的类 -->
+    <dubbo:annotation package="#{environment['demo3.dubbo.scan']?:'com.huxm.demo.demo3'}" />
+
+</beans>

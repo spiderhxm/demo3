@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: demo3
+    
+
+demo3:
+  zk:
+    addr: 127.0.0.1:2181
+    group: demo3
+  
+  dubbo:
+    port: 20880
+    scan: com.huxm.demo.demo3.service.impl
+      
+    
+      
+      
